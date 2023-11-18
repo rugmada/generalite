@@ -1,0 +1,5 @@
+getwd()
+
+df_sites <- arrow::read_parquet("../INTERACTIVE-MAPS-IN-SHINY-DASHBOARDS-USING-THE-LEAFLET-PACKAGE/abuja-use-r-bird-watcher-main/data/data.parquet") %>%
+  unite("site_id",decimalLongitude,decimalLatitude,day,month,year,remove=FALSE)
+sci_names <- arrow::read_parquet("../INTERACTIVE-MAPS-IN-SHINY-DASHBOARDS-USING-THE-LEAFLET-PACKAGE/abuja-use-r-bird-watcher-main/data/sci_names.parquet")

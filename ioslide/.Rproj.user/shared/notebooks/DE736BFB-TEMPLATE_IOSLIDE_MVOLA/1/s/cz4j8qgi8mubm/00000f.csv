@@ -1,0 +1,11 @@
+"0","library(caret)
+"
+"2","Failed to create bus connection: No such file or directory
+"
+"2","Warning: running command 'timedatectl' had status 1"
+"0","library(caret)"
+"0","library(RANN)"
+"0","library(kableExtra)"
+"0","library(ggplotify)"
+"0","library(plotly)"
+"0","library(gapminder)"

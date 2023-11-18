@@ -1,0 +1,26 @@
+{
+    "id": "AA4B4861",
+    "path": "~/Presentation/INTERACTIVE-MAPS-IN-SHINY-DASHBOARDS-USING-THE-LEAFLET-PACKAGE/abuja-use-r-bird-watcher-main/app.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1669037352068.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "104,117",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1669039016,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1669039331389,
+    "read_only": false,
+    "read_only_alternatives": []
+}

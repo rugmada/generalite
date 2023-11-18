@@ -1,0 +1,1081 @@
+---
+title: "Tutoriel 2 : Introduction à R et à ses particularités"
+author : "David M. Goehring 2004 , Juliet R.C. Pulliam 2008,2009, Steve Bellan 2010, Cara Brook 2016"
+output:
+  learnr::tutorial :
+    progressive: true
+    allow_skip: true
+    language:
+      fr:
+        button:
+          nexttopic: Suivant
+          previoustopic: Précédent
+runtime: shiny_prerendered
+description: "Emprunté à : International Clinics on Infectious Disease Dynamics and Data Program"
+---
+
+```{r setup, include=FALSE}
+
+#install learnr
+#remotes::install_github("rstudio/gradethis")
+
+
+library(learnr)
+library(gradethis)
+library(ggplot2)
+gradethis::gradethis_setup()
+tutorial_options(exercise.cap = "Sandbox")
+```
+
+```{r, include=FALSE, echo=FALSE}
+# custom_checker <- function(label, user_code, check_code, envir_result, evaluate_result, last_value, stage, ...) {
+#   # this is a code check
+#   if (stage == "code_check") {
+#     if (is_bad_code(user_code, check_code)) {
+#       return(list(message = "Je ne m'attendais pas à un tel code", correct = FALSE))
+#     }
+#     return(list(message = "Bon code!", correct = TRUE))
+#   }
+#   # this is a fully evaluated chunk check
+#   if (is_bad_result(last_value, check_code)) {
+#     return(list(message = "Je ne m'attendais pas à ce résultat", correct = FALSE))
+#   }
+#   list(message = "Beau travail!", correct = TRUE, location = "append")
+# }
+# 
+# tutorial_options(exercise.checker = custom_checker)
+```
+
+## Test
+
+Explorez les boutons
+
+comment executer un code
+
+Les indices et la validation des résultats
+
+```{r addition, exercise=TRUE, exercise.eval=FALSE}
+# Lancez 1+1
+1 + 1
+```
+
+
+
+<!-- ```{r filter-solution, exercise.reveal_solution = FALSE} -->
+<!-- filter(flights, UniqueCarrier=="AA" | UniqueCarrier=="UA") -->
+<!-- ``` -->
+
+
+
+
+
+```{r addition-hint-1}
+# Utilisez + pour additionner
++
+```
+
+```{r addition-hint-2}
+1+1
+```
+
+```{r addition-solution, exercise.reveal_solution = FALSE}
+1+1
+```
+
+
+```{r addition-code-check}
+grade_code()
+```
+
+
+ 
+## SECTION A. Comment utiliser ces tutoriels
+
+### Règles de base
+
+#### Soyez attentif !
+
+Vous devriez comprendre tout ce que vous tapez. Demandez-vous : "Est-ce que je sais ce que signifie chaque chose que je tape ?" L'objectif n'est pas de terminer les exercices le plus rapidement possible, mais de réellement comprendre. S'il y a quelque chose que vous ne comprenez pas, demandez !
+
+Évitez de copier-coller !
+
+Si vous êtes comme moi, vous détestez le travail répétitif. À cet égard, j'espère que vous utiliserez les fonctions de copier et coller pour transférer du texte de ce fichier à R. Cela dit, surtout au début, vous apprendrez BEAUCOUP des fautes de frappe qui surviennent inévitablement lors de la saisie de texte dans R. Si vous ne vous permettez jamais de faire une faute de frappe en suivant le tutoriel, vous serez déconcerté lorsque vous travaillerez sur vos projets et que vous obtiendrez des erreurs apparemment aléatoires, par exemple, des parenthèses manquantes. Donc, pour l'instant, évitez autant que possible de copier-coller - c'est dans votre intérêt.
+Explorez !
+NE vous sentez PAS obligé de rester sur la bonne voie. Vous devriez viser à terminer les tutoriels dans la période de laboratoire spécifiée, mais c'est dans votre intérêt de vous dire : "Hé, c'est bizarre. Je me demande ce qui se passe si je modifie un peu cela." C'est ainsi que vous vous habituerez vraiment aux choses. N'ayez donc jamais peur d'essayer quelque chose et si votre programme ne se comporte pas comme vous vous y attendiez, demandez une explication. Si vous ne terminez pas les tutoriels pendant la période de laboratoire, vous pourrez y travailler pendant les périodes de travail de l'après-midi ou de la soirée.
+Prenez des notes dans ce tutoriel !
+Ces tutoriels devraient servir de bonne référence, et plus vous les annoterez pour les rendre clairs POUR VOUS, plus ils seront utiles. Vous tombez sur une fonction que vous pensez utile ? Notez-la. Pensez-vous que quelque chose que je vous ai demandé de faire est trompeur ? Corrigez-le.
+Ne vous découragez pas !
+Apprendre une nouvelle langue est toujours cumulatif. Au cours des prochaines semaines, je vous recommanderais de faire des calculs de base en R plutôt qu'avec une calculatrice, juste pour que vous vous sentiez plus à l'aise avec l'interface. Même si vous vous sentez peut-être défié, je m'attends à ce que vous soyez grandement récompensé par vos réalisations, même dès la fin du premier tutoriel.
+Procédure
+FONDAMENTALEMENT, chaque tutoriel est une série d'exercices guidés pour vous aider à développer une intuition pour résoudre des problèmes en utilisant R. À la fin de chaque tutoriel, il vous sera demandé de compléter une collection de questions de référence, auxquelles vous devriez être capable de répondre avec les outils appris dans le tutoriel. Les questions sont là pour vous permettre de tester si vous avez bien appris les concepts. Vous pouvez demander aux instructeurs de confirmer si vos réponses sont correctes.
+
+Alors, sans plus tarder, passons à R !
+
+
+## SECTION B. Se familiariser avec R : Plus que du simple langage pirate
+
+À la fin de ce tutoriel, vous devriez : 
+
+- Être familier avec l'interface de R 
+- Comprendre comment R gère les variables et les affectations 
+- Savoir sur quoi R est pointilleux 
+- Savoir comment utiliser les fonctions R 
+- Savoir comment utiliser les fonctionnalités d'aide de R 
+- Être introduit aux vecteurs de données 
+- Savoir comment accéder aux ensembles de données intrinsèques de R 
+- Savoir comment produire des graphiques de base dans R 
+
+### R comme calculatrice 
+
+Assurez-vous que R fonctionne. R sait faire pratiquement toutes les opérations mathématiques que vous pouvez imaginer. Alors essayons-en quelques-unes :
+
+
+```{r, eval=FALSE}
+3 + 4 
+5 * 5
+```
+
+```{r calculatrice, exercise=TRUE, exercise.eval=FALSE}
+# Lancez une opération
+```
+
+
+Remarquez comment R vous renvoie la réponse. La chose importante à noter ici est l'ordre des opérations que R utilise pour traiter les demandes. C'est à peu près la même chose que ce que vous avez appris en algèbre élémentaire, donc
+
+```{r, eval=FALSE}
+2 + 2 * 3 
+```
+
+n'est pas effectué de gauche à droite. De manière prévisible, les parenthèses sont la manière de dire à R de prioriser certaines opérations par rapport à d'autres, comme dans
+
+```{r, eval=FALSE}
+(2 + 2) * 3 
+
+```
+
+Si vous ne vous souvenez pas de vos leçons d'ordre des opérations datant d'il y a longtemps, pas de soucis. R n'en aura rien à faire si vous vous en tenez strictement aux parenthèses, et vous vous assurerez que R se comporte comme vous le souhaitez.
+
+```{r, eval=FALSE}
+(2 + (2 * (3))) 
+
+```
+
+### Commentaires en R
+
+Parfois, vous voudrez annoter votre code R afin qu'il soit plus facile à comprendre pour d'autres personnes (par exemple, vos instructeurs ou collaborateurs). Le symbole dièse (#) est utilisé à cette fin. Vous remarquerez que ces tutoriels font un usage intensif de cet outil. Mais notez que vous pouvez également ajouter des commentaires à la fin du code actif :
+
+```{r commentaire1, exercise=TRUE, exercise.eval=FALSE}
+5 / 7 # Ceci divise cinq par sept
+```
+
+
+R ignore tout ce qui suit le symbole dièse sur une ligne. Pour des commentaires sur plusieurs lignes, vous pouvez utiliser la notation suivante :
+
+```{r commentaire2, exercise=TRUE, exercise.eval=FALSE}
+# Ce
+# sont 
+# des 
+# commentaires
+# sur
+# plusieurs
+# lignes
+```
+
+
+Notez qu'il est souvent judicieux d'annoter votre code pour expliquer ce que vous avez fait. Cela vous aidera à revenir sur votre travail plus tard et à comprendre ce que vous avez fait.
+
+## Différents types d'objets en R
+
+R peut stocker différents types d'objets. L'une des structures de données les plus simples est un *vecteur*.
+
+Les vecteurs peuvent être créés de différentes manières. Par exemple :
+
+```{r vecteur, exercise=TRUE, exercise.eval=FALSE}
+vec1 <- c(1, 2, 3, 4, 5)  # Crée un vecteur contenant les nombres de 1 à 5
+vec2 <- c("chat", "chien", "oiseau")  # Crée un vecteur contenant des chaînes de caractères
+```
+
+
+Vous pouvez également créer des séquences à l'aide de la fonction "seq".
+
+```{r sequence, eval=FALSE}
+vec3 <- seq(1, 10, by = 2)  # Crée une séquence de 1 à 10 par pas de 2
+```
+
+
+Vous pouvez accéder aux éléments d'un vecteur en utilisant leur indice.
+
+```{r indice, eval=FALSE}
+vec1[3]  # Cela renvoie le troisième élément du vecteur vec1
+```
+
+
+La fonction "length" renvoie la longueur d'un vecteur.
+
+```{r longvecteur,eval=FALSE}
+length(vec1)  # Cela renvoie la longueur du vecteur vec1
+```
+
+
+Les vecteurs peuvent être combinés avec différentes fonctions, comme "c", "seq", ou "rep".
+
+```{r eval=FALSE}
+vec4 <- c(vec1, vec3)  # Concatène les vecteurs vec1 et vec3
+```
+
+
+Les matrices sont une autre structure de données importante en R.
+
+Vous pouvez créer une matrice à l'aide de la fonction "matrix".
+
+```{r matrice, exercise=TRUE, exercise.eval=TRUE}
+mat1 <- matrix(1:9, nrow = 3)  # Crée une matrice 3x3 avec les chiffres de 1 à 9
+```
+
+
+
+Vous pouvez accéder aux éléments d'une matrice en utilisant l'indice de ligne et de colonne.
+
+```{r matriceindex, eval= FALSE}
+mat1[2, 3]  # Cela renvoie l'élément à la deuxième ligne et troisième colonne de mat1
+```
+
+
+Les listes sont une structure de données flexible en R, qui peut contenir différents types d'objets.
+
+Vous pouvez créer une liste en utilisant la fonction "list".
+
+```{r liste, eval=FALSE}
+liste1 <- list(nombres = vec1, mots = vec2, matrice = mat1)  # Crée une liste avec un vecteur, une matrice, etc.
+```
+
+
+Vous pouvez accéder aux éléments d'une liste en utilisant leur nom ou leur indice.
+
+```{r listeaccess, eval=FALSE}
+liste1$nombres  # Cela renvoie le vecteur "nombres" de la liste liste1
+```
+
+
+
+```{r liste2, eval=FALSE}
+liste1[[3]]  # Cela renvoie le troisième élément de la liste liste1
+```
+
+Les facteurs sont utilisés pour travailler avec des données catégorielles.
+
+Vous pouvez créer un facteur à l'aide de la fonction "factor".
+
+```{r facteur, exercise=TRUE, exercise.eval=FALSE}
+facteur1 <- factor(c("a", "b", "a", "c", "b"))  # Crée un facteur à partir d'un vecteur
+```
+
+
+Vous pouvez voir les niveaux d'un facteur à l'aide de la fonction "levels".
+
+```{r level, eval=FALSE}
+levels(facteur1)  # Cela renvoie les niveaux du facteur facteur1
+```
+
+
+
+R possède de nombreuses autres structures de données et types d'objets, mais celles-ci sont parmi les plus courantes.
+
+Vous êtes maintenant familier avec certains des principaux types d'objets en R ! Voyons maintenant comment utiliser certaines fonctions.
+
+Fonctions et leur utilisation en R
+
+R a un large éventail de fonctions intégrées pour effectuer des opérations spécifiques. Par exemple :
+
+```{r sqrt, exercise=TRUE, exercise.eval=FALSE}
+sqrt(16)  # Cela renvoie la racine carrée de 16
+```
+
+
+La plupart des fonctions ont des arguments, qui sont des informations supplémentaires que la fonction utilise pour effectuer son travail. Par exemple :
+
+```{r seq, exercise=TRUE, exercise.eval=FALSE}
+seq(1, 10, by = 2)  # Ici, "by" est un argument spécifiant le pas dans la séquence
+```
+
+
+Certaines fonctions ont des arguments facultatifs, alors que d'autres nécessitent des arguments obligatoires pour fonctionner.
+
+Vous pouvez trouver de l'aide sur une fonction en utilisant la fonction "help" ou le point d'interrogation.
+
+```{r help, exercise=TRUE, exercise.eval=FALSE}
+help(seq)  # Cela ouvre la documentation sur la fonction "seq"
+```
+
+
+```{r baraingo, exercise=TRUE, exercise.eval=FALSE}
+?seq  # De même, cela ouvre la documentation sur la fonction "seq"
+```
+
+
+Utilisez ces fonctions intégrées à votre avantage et explorez-en de nouvelles !
+
+Cela conclut cette partie du tutoriel. Vous avez maintenant un aperçu de certains
+
+
+## Manipulation de données en R
+
+R offre de puissants outils pour manipuler les données. Voyons quelques opérations courantes.
+
+### Filtrage de données
+Vous pouvez filtrer des données en fonction de conditions spécifiques à l'aide de crochets "[".
+
+```{r df, exercise=TRUE, exercise.eval=FALSE}
+donnees <- data.frame(
+  nom = c("Alice", "Bob", "Charlie", "David", "Eva"),
+  age = c(25, 30, 22, 27, 35),
+  score = c(80, 75, 90, 85, 88)
+)
+```
+
+
+
+Supposons que nous voulons filtrer les personnes dont l'âge est supérieur à 25 ans.
+
+```{r filterdf1, exercise=TRUE , exercise.setup = "df"}
+filtre_age <- donnees[donnees$age > 25, ]  # Sélectionne les lignes avec un âge supérieur à 25
+```
+
+
+Modification de données
+Vous pouvez modifier les valeurs dans un data frame en utilisant des conditions.
+
+Supposons que nous voulons augmenter le score de 5 points pour ceux dont l'âge est supérieur à 25.
+
+```{r filterdf2, exercise=TRUE, exercise.eval=FALSE, exercise.setup = "df"}
+donnees$score[donnees$age > 25] <- donnees$score[donnees$age > 25] + 5
+```
+
+
+
+Ajout de nouvelles colonnes
+Vous pouvez ajouter de nouvelles colonnes à un data frame existant.
+
+```{r filtredf3, exercise=TRUE, exercise.eval=FALSE, exercise.setup = "df"}
+donnees$groupe <- ifelse(donnees$age > 25, "A", "B")  # Ajoute une nouvelle colonne 'groupe' basée sur une condition
+```
+
+Suppression de colonnes
+Vous pouvez supprimer des colonnes d'un data frame en utilisant le signe moins "-".
+
+```{r dfsansage, exercise=TRUE, exercise.eval=FALSE, exercise.setup = "df"}
+donnees_sans_age <- donnees[, -2]  # Supprime la colonne 'age'
+```
+
+Combinaison de data frames
+Vous pouvez combiner des data frames par lignes ou par colonnes.
+
+```{r df2, exercise=TRUE, exercise.eval=FALSE}
+donnees2 <- data.frame(
+  nom = c("Frank", "Grace"),
+  age = c(29, 31),
+  score = c(92, 87)
+)
+```
+
+
+
+```{r rbind, eval=FALSE}
+donnees_combinees <- rbind(donnees, donnees2)  # Combine les data frames par lignes
+```
+
+
+
+### Exploration de données
+
+Vous pouvez obtenir des résumés statistiques ou des aperçus de vos données.
+
+
+```{r summary, exercise=TRUE, exercise.eval=FALSE}
+summary(donnees)  # Obtient des statistiques sommaires des données
+```
+
+
+
+
+```{r str, exercise=TRUE, exercise.eval=FALSE}
+str(donnees)  # Affiche la structure des données
+```
+
+
+
+Ces opérations représentent une petite partie des capacités de manipulation de données en R. Il existe de nombreuses autres fonctions et méthodes pour travailler efficacement avec des données.
+
+
+
+##  Visualisation de données en R
+
+R offre une variété de bibliothèques pour la visualisation de données. Voici un exemple avec ggplot2, l'une des bibliothèques les plus populaires.
+
+
+```{r}
+library(ggplot2)
+```
+
+
+
+Création d'un graphique à barres à partir des données
+
+```{r graphplot, exercise=TRUE, exercise.eval=FALSE}
+graphique <- ggplot(donnees, aes(x = nom, y = score, fill = groupe)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Scores par personne", x = "Nom", y = "Score") +
+  theme_minimal()
+
+print(graphique) # Affichage du graphique
+```
+
+
+
+Avec ggplot2, vous pouvez créer une grande variété de graphiques personnalisables pour explorer et présenter vos données.
+
+Cela conclut cette section sur la visualisation des données. Passons à la suite !
+
+
+## Pratiquer avec RStudio
+
+```{r mauvais, exercise=TRUE, exercise.eval=FALSE}
+	# (5*+ 2) / 7 # MAUVAIS 
+```
+
+
+De cette façon, tu pourras voir quand je te demande de faire
+quelque chose de stupide.
+
+Rendre les choses persistantes 
+
+Jusqu'à présent, tout ce que tu as fait était transitoire ; c'était
+visible sur ton écran mais tu n'avais aucun moyen de ramener ces
+résultats lorsque tu voulais les réutiliser. Rarement voudras-tu
+utiliser R de cette manière. Tu voudras effectuer beaucoup d'étapes
+sur tes données et stocker tous les résultats de toutes ces
+étapes. Pour cela, tu as besoin d'assigner des valeurs à des
+variables dans le système R. La flèche pictographique à deux
+caractères, <-, est l'opérateur d'assignation en R. Essaie
+
+
+```{r vectx, exercise=TRUE, exercise.eval=FALSE}
+x <- 3 
+```
+
+
+
+en stockant la valeur 3 dans la variable x (sans aucun affichage). La
+valeur est ensuite récupérable simplement en entrant
+
+```{r pvectx, eval=FALSE}
+x 
+```
+
+
+
+
+En associant ce concept à l'utilité de R en tant que calculatrice,
+tu peux effectuer une assignation et un calcul sur la même ligne,
+comme dans
+
+```{r vecty, eval=FALSE}
+y <- 5 - 2 
+```
+
+
+
+Et des variables et des nombres peuvent être utilisés ensemble dans
+des calculs pour créer de nouvelles variables, comme dans
+
+```{r , eval=FALSE}
+z <- y + 2 * x 
+```
+
+
+
+Souviens-toi que tu peux vérifier quelle est la valeur d'une
+variable à tout moment, simplement en la "calculant" par
+elle-même, c'est-à-dire,
+
+```{r , eval=FALSE}
+z 
+```
+
+
+
+Remarque que les noms de variables peuvent être des mots et qu'ils
+peuvent être aussi longs que tu le veux. Note également que
+l'opérateur d'assignation peut être utilisé dans l'autre sens, ->.
+
+Bien que x, y et z soient faciles à taper, des noms plus mémorables
+comme poids ou total pourraient être plus utiles pour te rappeler les
+valeurs qu'ils contiennent.
+
+
+Tu as peut-être remarqué que l'assignation se produit en dernier
+dans l'ordre des opérations, ce qui signifie que R ne sera pas
+confus si tu assignes une variable à elle-même, comme dans
+
+
+```{r , eval=FALSE}
+z * z -> z 
+```
+
+
+
+Lâche le clavier ! Prends un instrument d'écriture :
+
+```{r , eval=FALSE}
+x <- 8
+x -> y
+2 -> x
+```
+
+
+Que valent x et y ?
+
+Maintenant exécute les commandes en supprimant les "##" au début
+des lignes et compare tes réponses.
+
+
+R est sensible à la casse, donc les variables x et X sont
+indépendantes. Les noms de variables ne peuvent contenir que des
+lettres, des chiffres et des points.
+
+De plus, R utilise un certain nombre de noms de variables
+probables comme fonctions, ce qui les rend des choix confus en tant
+que variables. Les pires d'entre elles sont c, q, t, C, D, F, I et
+T. Évite-les.
+
+Tu peux rencontrer une version synonyme de l'opérateur
+d'assignation <- dans certains codes, =. Bien qu'il soit un
+caractère plus court, il peut être confus quant à la direction de
+l'assignation et est souvent confondu avec l'opérateur de
+test-logique-d'égalité, ==, dont nous parlerons plus tard. Bien
+que je ne recommande pas d'utiliser l'opérateur d'assignation =, tu
+devrais en être conscient.
+
+
+Les fonctions sont tes amies
+Alors que les opérations de base, telles que l'addition, sont des
+caractéristiques inestimables de R, le véritable cœur de R se
+présente sous la forme de fonctions. Les fonctions, en général,
+prennent des arguments et les transforment en une sortie. Cette
+sortie peut être un test statistique détaillé, un graphique ou une
+simple sommation - la chose importante à réaliser est que
+fondamentalement toutes les fonctions en R obéissent à des règles
+similaires. Une fonction en R est tout ce qui peut être spécifié
+par un nom suivi d'un ensemble de parenthèses - contenant les
+arguments de la fonction. Les arguments sont les entrées dont une
+fonction a besoin pour effectuer sa tâche et produire la sortie
+souhaitée.
+
+Cela deviendra légèrement plus clair lorsque je discuterai de
+l'utilitaire d'aide ci-dessous, mais les arguments peuvent être
+soit requis soit avoir des valeurs par défaut s'ils ne sont pas
+spécifiés. Parce qu'il serait délicat de garder une trace de
+l'ordre de 10 entrées possibles, qui pourraient toutes être
+facultatives, R permet de nommer ces arguments dans la
+fonction. Cela rend les fonctions R faciles à écrire et à lire,
+après un peu d'acclimatation.
+
+Prends la fonction log(). Elle a un argument requis, le nombre pour
+lequel tu veux le logarithme, évidemment. Mais elle a aussi un
+argument optionnel, base. Cet argument a pour valeur par défaut e
+s'il est omis.
+
+Donc, tu peux déterminer le logarithme naturel de quelque chose
+assez facilement, comme dans,
+
+```{r , eval=FALSE}
+log(10)
+```
+
+ 
+
+Pour obtenir le logarithme en base 10 de 10, tu peux écrire soit
+
+```{r , eval=FALSE}
+log(10, 10) 
+
+log(10, base=10) 
+```
+
+
+
+"Alors, pourquoi voudrais-je jamais faire la deuxième option ?"
+demandes-tu. Ici, cela n'aurait pas beaucoup d'importance. Ce
+serait légèrement plus facile à comprendre pour un lecteur de ton
+code dans le second cas, mais peut-être pas assez utile pour
+justifier la frappe supplémentaire.
+
+Mais à mesure que nous passons à des fonctions plus complexes,
+surtout les fonctions graphiques comme plot, le nombre d'arguments
+potentiels est énorme. Veux-tu un sous-titre pour l'axe des
+y ? Très probablement pas, mais lorsque tu en as besoin, c'est un
+argument très utile à avoir en attente. Dans ces fonctions, les
+deux ou trois premiers arguments seront spécifiés sans nom, puis le
+reste ressemblera à l'argument base=10 ci-dessus. Par exemple,
+presque chaque plot que tu produis aura besoin d'une étiquette sur
+l'axe x, disons, donc tu te retrouveras à taper xlab= souvent.
+
+
+### Répétition des lignes de code
+As-tu essayé d'appuyer sur la flèche vers le haut ? Si ton curseur
+est à l'invite de commande dans la fenêtre de la Console, R
+rappellera chacune de tes commandes précédentes lorsque tu
+appuieras à plusieurs reprises sur la flèche vers le haut. Si tu
+travailles à partir d'un script dans R Studio, tu peux placer le
+curseur sur la ligne que tu veux exécuter et cliquer sur le bouton
+"Exécuter" en haut de la fenêtre. Sur un Mac, tu peux appuyer sur
+CMD-Entrée, au lieu de "Exécuter." Pour répéter plusieurs lignes
+de code à partir du script, surligne les lignes et appuie sur
+"Exécuter" ou CMD-Entrée.
+
+Économise-toi le temps et l'énergie de retaper en réutilisant ce
+que tu as déjà entré. Cela peut être particulièrement utile si tu
+as fait une petite erreur de frappe dans une longue commande.
+
+### Faire disparaître les choses
+
+
+Ci-dessus, tu as été introduit à la procédure d'assignation en
+R. Plus tu as de variables assignées ou importées, plus ta mémoire
+deviendra encombrée. Tu peux voir quelles variables sont stockées
+dans la mémoire de R à tout moment en tapant*
+
+```{r lsls, eval=FALSE}
+ls()
+```
+
+
+Cela peut sembler étrange, étant donné ce que je viens de te dire
+sur les arguments des fonctions ci-dessus, mais il se trouve
+simplement que la fonction ls() a des arguments, mais ils
+prennent tous des valeurs par défaut lorsqu'aucun n'est
+spécifié.
+
+Si tu travailles dans Rstudio, tu peux également voir les variables
+et fonctions définies dans ton espace de travail en cliquant sur
+l'onglet "Espace de travail", qui montrera non seulement les
+noms de variables et de fonctions mais aussi la taille des
+variables définies et les arguments pour chaque fonction.
+
+Si tu as identifié une variable spécifique ou un ensemble de variables que
+tu aimerais supprimer de la mémoire, tu as juste besoin de taper
+
+```{r rmz, eval=FALSE}
+rm(z)
+```
+
+
+La variable "z" peut être remplacée par n'importe quel nombre de variables,
+séparées par des virgules.
+
+Alternativement, on a souvent besoin de vider la mémoire de R et de repartir
+à zéro - surtout parce que R va, par défaut, démarrer avec les mêmes variables
+en mémoire que lorsque tu as fermé le programme pour la dernière fois.
+
+La fonction ici est un peu compliquée, mais instructive,
+
+
+```{r rmls, eval=FALSE}
+rm(list = ls()) 
+```
+
+
+Ici, tu dis à R, "Je ne vais pas te donner des noms de variables individuelles,
+à la place, je te donne une liste de noms de variables. Pour générer cette
+liste, exécute la fonction qui crée la liste de toutes les variables
+stockées en mémoire, ls()."
+
+### Obtenir de l'aide
+
+
+Lorsque tu ne sais pas ce que fait une fonction ou quels arguments elle prend,
+le système d'aide intégré de R est exceptionnellement pratique. La manière la
+plus simple d'accéder à l'aide sur une fonction spécifique, comme log, est
+
+
+```{r loghelp, eval=FALSE}
+?log
+```
+
+
+Mais de manière équivalente, tu peux taper
+
+```{r helolog, eval=FALSE}
+help(log)
+```
+
+Lorsque l'élément sur lequel tu as besoin d'aide est un opérateur, plutôt
+qu'une fonction standard (comme l'opérateur d'addition, +), seule la seconde
+de ces options fonctionnera, et tu dois inclure l'opérateur entre guillemets, comme
+
+
+```{r helppls, eval=FALSE}
+help("+") 
+```
+
+
+
+
+Les fichiers d'aide dans R peuvent sembler intimidants. Le truc est de savoir
+ce que tu n'as pas besoin de savoir. Souvent, tu finiras par n'utiliser que
+quelques-uns des arguments. La plupart des arguments auront des valeurs par
+défaut standard acceptables notées par quelque chose comme nom=FALSE. Tu n'as
+pas besoin de comprendre chaque argument dans une fonction pour obtenir ce que
+tu veux.
+
+Les descriptions peuvent être utiles, mais tu voudras également regarder les
+exemples. Les exemples sont généralement ciblés sur des scénarios courants
+et sont le plus souvent bien formulés.
+
+Enfin, la section "voir aussi" peut être utile si tu cherches une fonction
+mais ne connais que le nom d'une fonction similaire.
+
+
+À l'inverse, tu pourrais savoir ce que fait une fonction, mais ne pas connaître
+le nom de cette fonction en R. Il n'y a pas de solution incroyablement satisfaisante
+à cela, mais une bonne première étape est de rechercher dans la documentation
+d'aide intégrée le concept :
+
+```{r helpsearchmean, eval=FALSE}
+help.search("mean") 
+```
+
+
+
+Ou, de manière équivalente,
+
+```{r helpmean, eval=FALSE}
+??mean
+```
+
+
+
+La prochaine étape est de rechercher sur le site web de R, http://www.r-project.org,
+toute aide qu'il peut fournir. La manière la plus simple de le faire depuis R est
+de taper
+
+```{r rsitesearch, eval=FALSE}
+RSiteSearch("mean") 
+```
+
+
+
+Avec ces outils en main, tu devrais être prêt à résoudre la plupart de tes problèmes
+R toi-même !
+
+Ce tutoriel n'aura pas toutes les fonctions et méthodes dont tu as besoin. Tu devrais
+d'abord te fier aux installations d'aide de R - qui sont très bonnes. Bien sûr, les
+instructeurs sont également heureux de t'aider en cas de difficultés, en particulier
+lorsque tu développes un besoin pour de nouvelles méthodes en travaillant sur tes projets.
+
+## SECTION C. Introduction aux vecteurs
+
+
+## Génération de vecteurs aléatoires
+Il est courant en programmation de vouloir générer une liste de
+nombres aléatoires. R a plusieurs fonctions différentes pour cela,
+mais je vais te montrer rnorm(), qui génère des nombres aléatoires
+à partir de la distribution normale standard).
+
+Aujourd'hui, nous utiliserons qu'un seul argument de base pour la
+fonction rnorm(), le nombre de nombres aléatoires que nous voulons
+dans notre vecteur. Disons que nous voulons 110 de ces nombres
+aléatoires, alors en tapant
+
+```{r rnorm, eval=FALSE}
+mes.aleatoires <- rnorm(110) 
+```
+
+cela va les générer et les stocker dans notre variable désignée.
+
+Fonctions sur les vecteurs
+De nombreuses fonctions prennent un vecteur comme argument, plutôt
+qu'un seul nombre (ou en plus d'un seul nombre). Maintenant que tu
+sais comment générer des vecteurs selon les spécifications, ils
+peuvent être très utiles. Quelques exemples :
+
+
+```{r vectcalc, eval=FALSE}
+median(mes.aleatoires) 
+
+mean(mes.aleatoires) 
+
+sin(rnorm(10)) 
+
+c(1,2,3)^3 
+```
+
+
+
+Selon la nature de la fonction, le résultat ici est une seule valeur
+ou un vecteur transformé de même longueur que l'original. Les
+possibilités de structures de données d'entrée et de sortie sont
+innombrables, mais j'espère que tu réaliseras la diversité des
+rôles que les fonctions peuvent jouer dans tes analyses.
+
+Tracés de base
+Produire une figure médiocre dans R est trivial. Avec la plupart
+des structures de données, tu obtiendras quelque chose en tapant
+simplement
+
+```{r plotaleat, eval=FALSE}
+plot(mes.aleatoires) 
+```
+
+
+
+
+On peut se rapprocher de quelque chose d'utile en changeant
+l'arrangement de nos données, par exemple,
+
+```{r plotsort, eval=FALSE}
+plot(sort(mes.aleatoires)) 
+```
+
+
+
+qui trie notre variable avant de la tracer, produisant une meilleure
+vision de la distribution des valeurs.
+
+Ou nous pouvons changer le type de graphique ou les caractéristiques
+du graphique, comme dans
+
+```{r histal, eval=FALSE}
+hist(mes.aleatoires) 
+```
+
+
+
+pour produire un histogramme montrant la distribution des nombres
+que nous avons tirés de la distribution normale standard.
+
+Dans ces derniers exemples, j'ai utilisé des pseudodonnées arbitraires
+ou aléatoires, au lieu de vraies données, pour t'aider à comprendre
+la visualisation des vecteurs. Par conséquent, étiqueter les axes
+dans ce cas extrême est sans pertinence. Tu devrais généralement
+étiqueter, avec un titre et des axes, chaque figure avec des données.
+Plus d'informations à ce sujet ci-dessous.
+
+## SECTION D. Visualizing Datasets
+
+### Où trouver des données
+
+Importer des données dans R depuis ton ordinateur est assez
+simple, mais pour l'instant, nous n'utiliserons que les ensembles
+de données contenus dans les packages par défaut de R. Générer une
+liste de ces ensembles de données disponibles est aussi simple que
+de taper
+
+```{r data, eval=FALSE}
+data() 
+```
+
+
+
+mais ici, R te limite un peu en ne regardant pas dans tous les
+packages disponibles. Il te prévient de cela en bas de sa réponse
+et suggère que tu devrais essayer
+
+```{r datapackage, eval=FALSE}
+data(package = .packages(all.available = TRUE)) 
+```
+
+
+
+ce qui te donne une liste complète, notant de manière importante
+dans sa sortie à partir de quel package provient chaque ensemble de
+données.
+
+Obtenir et comprendre les ensembles de données Une fois que tu as
+trouvé un ensemble de données que tu veux utiliser (et nous
+utiliserons les Données sur l'Attitude de Chatterjee-Price,
+'attitude', comme exemple), tu le charges en mémoire en tapant
+
+```{r dataatt, eval=FALSE}
+data(attitude)
+```
+
+
+Pour beaucoup de ces ensembles de données trouvés par la deuxième
+méthode, plus approfondie, ci-dessus, cela produira une erreur,
+car il ne regarde que dans le package par défaut. Contourne cela
+en ajoutant un argument spécifiant le package de l'ensemble de
+données, ici en utilisant catsM, une variante de celui vu en cours
+
+```{r datacatsm, eval=FALSE}
+data(catsM, package="boot") 
+```
+
+
+Après avoir effectué cette étape, les données sont chargées dans
+la variable du même nom dans la mémoire de R, (habituellement, mais
+pas toujours) sous la forme d'un data frame, une autre structure de
+données. Mieux adaptés à l'analyse statistique, les data frames
+sont une alternative aux structures de données standard que tu as
+peut-être déjà rencontrées en programmation mathématique telles
+que les matrices ou les tableaux. Bien qu'ils soient incroyablement
+sophistiqués, je ne pourrai pas en introduire la plupart ici. Nous
+nous en tiendrons aux bases absolues; pour un traitement plus
+approfondi des data frames et d'autres structures de données dans
+R, consulte le site web de Travis Porco :
+http://www.mathepi.com/comp/index.html.
+
+Tout d'abord, tu voudras probablement jeter un œil aux données
+elles-mêmes, juste pour voir ce qu'elles contiennent. Comme tu
+l'as appris, cela peut être fait simplement en tapant le nom de ta
+nouvelle variable sur une ligne seule
+
+```{r att, eval=FALSE}
+attitude
+```
+
+
+Le graphique résultant (le plus souvent) aura des lignes et des
+colonnes nommées qui correspondent aux données pour ces conditions
+et propriétés. Dans cet exemple, les individus sont numérotés de 1
+à 30 et chacun a des réponses numériques correspondantes à
+différentes questions concernant leur attitude.
+
+Tu peux également simplement visualiser le haut de l'ensemble de
+données (ce qui te permet également de voir les noms des colonnes)
+en tapant
+
+```{r headattitude, eval=FALSE}
+head(attitude)
+```
+
+
+Une autre étape critique lors de la manipulation de tout ensemble de
+données intégré est de consulter les informations
+accompagnant l'ensemble de données, accessibles en tapant
+
+```{r helpattitude, eval=FALSE}
+help(attitude)
+```
+
+
+ou, si nécessaire, par analogie avec les problèmes de package
+introduits ci-dessus,
+
+```{r helpcatsm, eval=FALSE}
+help(catsM, package="boot") 
+```
+
+
+Ce texte inclura des informations clés sur les procédures et les
+hypothèses impliquées dans la collecte de données, en plus d'une
+compréhension de base des composants des données. Les exemples du
+fichier fournissent également des points de départ pour la
+visualisation ou l'analyse des données.
+
+En plus des data frames, certains ensembles de données R incluent
+des collections de données plus spécialisées, telles que des séries
+temporelles ou des graphiques de distance. Tu sauras si tu as un
+tel ensemble de données à partir du fichier d'aide associé à
+l'ensemble de données (ou de son échec à se comporter de manière
+prévisible par rapport aux commandes de data-frame). N'hésite pas
+à utiliser le système d'aide pour trouver des façons de visualiser
+ces autres collections de données ! NOTE : Dans quelques jours, nous
+ferons un tutoriel complet sur la visualisation des données sur les
+maladies infectieuses.
+
+Les figures sont produites de la même manière que ci-dessus, avec
+quelques nouvelles considérations.
+
+Les analyses appropriées et significatives seront fortement
+dépendantes de la structure des données. Des résultats rapides,
+simples et modérément intéressants sont produits
+indépendamment-par-colonne avec des commandes simples sur
+l'ensemble de données en tant que tel, par exemple,
+
+```{r summattidude, eval=FALSE}
+summary(attitude) 
+```
+
+
+
+```{r boxplotattitude, eval=FALSE}
+boxplot(attitude) 
+```
+
+
+Pour les data frames, les colonnes sont souvent comparées de
+différentes manières, donc une notation spéciale, le signe dollar,
+\$, est réservée pour accéder aux colonnes individuelles. La syntaxe
+est simplement
+data.frame$nom.de.la.colonne. Pour voir ce que cela signifie pour R,
+nous pouvons taper la notation pour la première colonne de notre
+data frame attitude, la colonne rating
+
+```{r rating, eval=FALSE}
+attitude$rating 
+```
+
+
+Le résultat est simplement un vecteur des valeurs, ordonnées
+identiquement à la colonne originale. Cela signifie que tu peux
+invoquer n'importe quelle fonction avec laquelle tu es familier sur
+des vecteurs, comme dans,
+
+```{r histatttitude, eval=FALSE}
+hist(attitude$complaints) 
+```
+
+
+
+```{r plotattitudecritical, eval=FALSE}
+plot(sort(attitude$critical)) 
+```
+
+
+
+D'autres fonctions examineront la relation entre les colonnes, sur
+laquelle on peut dire beaucoup de choses.
+
+L'exemple le plus simple est d'ajouter un second vecteur à notre
+fonction plot, ce qui placera les valeurs de deux colonnes sur
+chacun des axes.
+
+```{r plotattitude, eval=FALSE}
+plot(attitude$critical, attitude$privileges) 
+```
+
+
+
+Une fois que tu as trouvé des figures utiles à produire, tu dois
+t'assurer qu'elles sont étiquetées de manière appropriée. Les
+arguments de la plupart des fonctions graphiques comprennent (entre
+autres) xlab, ylab et main. Voici un exemple d'un graphique finalisé.
+
+```{r plotcat, eval=FALSE}
+plot(catsM$Bwt,catsM$Hwt,
+     xlab="Poids corporel du chat mâle (kg)",
+     ylab="Poids du cœur du chat mâle (g)",
+     main="Poids corporel vs Poids du cœur pour les chats mâles de plus de 2 livres")
+```
+
+
+
+Toujours étiqueter tes axes (et fournir des unités, quand
+pertinent). R générera parfois des étiquettes par défaut, mais tu
+devras te demander si ces étiquettes sont suffisamment informatives
+(elles ne le sont généralement pas). Les figures doivent également
+généralement avoir des titres descriptifs.
+
+Armé des fichiers d'aide et de cette proto-introduction à la
+visualisation, tu devrais commencer à voir comment tu peux raconter
+une histoire avec un ensemble de données.
+
+Note comment j'ai séparé la commande de tracé ci-dessus en quatre
+lignes qui étaient correctement indentées. Certains codeurs
+trouvent cela beaucoup plus facile à lire et à déboguer, bien que
+cela dépende des préférences individuelles. Les utilisateurs d'EMACS
+constateront qu'EMACS formate souvent cela automatiquement pour toi
+si tu appuies sur Entrée tout en étant toujours à l'intérieur d'une
+fonction, ou d'une expression entre parenthèses non fermées.
+

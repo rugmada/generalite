@@ -1,0 +1,13 @@
+name: testlearnr
+title: testlearnr
+username: mbda
+account: mbda
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10564115
+bundleId: 7941649
+url: https://mbda.shinyapps.io/testlearnr/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: learnr.R|maptest.R|sites.csv|testlearnr_data/data_chunks_index.txt|testlearnr.html|visitPm.csv|general|INTERACTIVE-MAPS-IN-SHINY-DASHBOARDS-USING-THE-LEAFLET-PACKAGE|ioslide|r-sudoku
